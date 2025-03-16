@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Услуги{% endblock %}
+
+{% block content %}
+<div class="features">
+    <div class="features-grid">
+        {% for service in services %}
+        <div class="feature-card">
+            <img src="{{ service.image.url }}" alt="{{ service.title }}">
+            <h2>{{ service.title }}</h2>
+            <p>{{ service.description }}</p>
+            <p>Цена от: {{ service.price_from }} руб.</p>
+            <a href="{% url 'contacts' %}" class="btn">Заказать</a>
+        </div>
+        {% empty %}
+        <p>Нет доступных услуг.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

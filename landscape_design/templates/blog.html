@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block content %}
+<h1>Наш блог</h1>
+<div class="blog-posts">
+    {% for post in posts %}
+        <div class="blog-post">
+            <h2>{{ post.title }}</h2>
+            <p><strong>Дата публикации:</strong> {{ post.created_at }}</p>
+            <p>{{ post.content|truncatewords:50 }}</p>
+            <button class="read-more-btn" data-modal="modal-{{ post.id }}">Читать далее</button>
+        </div>
+
+        <!-- Модальное окно -->
+        <div id="modal-{{ post.id }}" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" data-modal="modal-{{ post.id }}">&times;</span>
+                <h2>{{ post.title }}</h2>
+                <p><strong>Дата публикации:</strong> {{ post.created_at }}</p>
+                <p>{{ post.content }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    // Получаем все кнопки "Читать далее"
+    const readMoreButtons = document.querySelectorAll('.read-more-btn');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+
+    // Открытие модального окна
+    readMoreButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modalId = button.getAttribute('data-modal');
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'block';
+        });
+    });
+
+    // Закрытие модального окна
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modalId = button.getAttribute('data-modal');
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+        });
+    });
+
+    // Закрытие модального окна при клике вне его содержимого
+    window.addEventListener('click', (event) => {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

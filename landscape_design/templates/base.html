@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ландшафтный дизайн{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+        <div class="logo">
+            <a href="{% url 'index' %}"><h2>LandScape</h2></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li><a href="{% url 'services' %}">Услуги</a></li>
+                <li><a href="{% url 'portfolio' %}">Портфолио</a></li>
+                <li><a href="{% url 'blog' %}">Блог</a></li>
+                <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="#" onclick="logout()">Выйти</a></li>
+            {% else %}
+                <li><a href="#" onclick="openLoginModal()">Войти</a></li>
+                <li><a href="#" onclick="openRegisterModal()">Регистрация</a></li>
+            {% endif %}
+            </ul>
+        </nav>
+    </div>
+    </header>
+    
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Ландшафтный дизайн. Все права защищены.</p>
+    </footer>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+</body>
+<script>
+    function openModal(content) {
+        const modal = document.getElementById('modal');
+        const modalBody = document.getElementById('modal-body');
+        modalBody.innerHTML = content;
+        modal.style.display = 'block';
+    }
+    
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+    
+    function openLoginModal() {
+        const loginForm = `
+            <h2>Вход</h2>
+            <form id="login-form">
+                <input type="text" name="username" placeholder="Логин" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+        `;
+        openModal(loginForm);
+        document.getElementById('login-form').addEventListener('submit', submitLoginForm);
+    }
+    
+    function openRegisterModal() {
+        const registerForm = `
+            <h2>Регистрация</h2>
+            <form id="register-form">
+                <input type="text" name="username" placeholder="Логин" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password1" placeholder="Пароль" required>
+                <input type="password" name="password2" placeholder="Повторите пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        `;
+        openModal(registerForm);
+        document.getElementById('register-form').addEventListener('submit', submitRegisterForm);
+    }
+    
+    function submitLoginForm(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        fetch('/login/', {
+            method: 'POST',
+            body: formData,
+            headers: {'X-CSRFToken': getCookie('csrftoken')}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert('Ошибка входа');
+            }
+        });
+    }
+    
+    function submitRegisterForm(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        fetch('/register/', {
+            method: 'POST',
+            body: formData,
+            headers: {'X-CSRFToken': getCookie('csrftoken')}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert('Ошибка регистрации, данный логин занят');
+            }
+        });
+    }
+    
+    function logout() {
+        window.location.href = '/logout/';
+    }
+    
+    // Utility function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    document.querySelector('.close').addEventListener('click', closeModal);
+</script>
+</html>

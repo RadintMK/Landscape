@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Ландшафтный дизайн - Создаем красоту вокруг вас{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Превращаем мечты в цветущие сады</h1>
+        <p class="hero-text">Профессиональный ландшафтный дизайн для тех, кто ценит красоту и гармонию природы</p>
+        <a href="{% url 'contacts' %}" class="btn hero-btn">Получить консультацию</a>
+    </div>
+</section>
+
+<section class="features">
+    <div class="features-grid">
+        <div class="feature-card">
+            <i class="fas fa-tree"></i>
+            <h3>Озеленение</h3>
+            <p>Создание уникальных композиций из растений с учетом климата и особенностей участка</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-pencil-ruler"></i>
+            <h3>Проектирование</h3>
+            <p>Разработка детальных проектов с учетом всех ваших пожеланий</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-leaf"></i>
+            <h3>Уход за садом</h3>
+            <p>Профессиональное обслуживание и поддержание красоты вашего участка</p>
+        </div>
+    </div>
+</section>
+
+<section class="about-preview">
+    <div class="about-content">
+        <h2>Почему выбирают нас</h2>
+        <div class="benefits-grid">
+            <div class="benefit">
+                <span class="benefit-number">10+</span>
+                <p>лет опыта</p>
+            </div>
+            <div class="benefit">
+                <span class="benefit-number">200+</span>
+                <p>реализованных проектов</p>
+            </div>
+            <div class="benefit">
+                <span class="benefit-number">100%</span>
+                <p>довольных клиентов</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2>Готовы преобразить свой участок?</h2>
+    <p>Запишитесь на бесплатную консультацию с нашим дизайнером</p>
+    <a href="{% url 'contacts' %}" class="btn cta-btn">Записаться сейчас</a>
+</section>
+{% endblock %}
