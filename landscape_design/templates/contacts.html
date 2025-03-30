@@ -3,17 +3,126 @@
 {% block title %}Контакты{% endblock %}
 
 {% block content %}
-<h1>Контакты</h1>
 
-{% if message_sent %}
-    <p>Сообщение успешно отправлено!</p>
-{% else %}
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Отправить</button>
-    </form>
-{% endif %}
+        <main>
+            <div class="container">
+                <div class="contacts-grid">
+                    <div class="contacts-form">
+                        <h2>Связаться с нами</h2>
+                        <p>Заполните форму ниже, и мы свяжемся с вами в ближайшее время</p>
+
+                        <form id="contact-form" class="message-form" method="post" action="{% url 'contacts' %}">
+                            {% csrf_token %}
+                            <div class="message-sent-success" style="display: {% if message_sent %}block{% else %}none{% endif %}; background-color: #d4edda; border-color: #c3e6cb; color: #155724; padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: .25rem;">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>Сообщение успешно отправлено!</h3>
+                                <p>Мы свяжемся с вами в ближайшее время.</p>
+                            </div>
+
+                             {% if form.errors %}
+                                 <div style="color: red; margin-bottom: 15px; padding: 10px; border: 1px solid red; border-radius: 5px;">
+                                    <strong>Пожалуйста, исправьте ошибки:</strong>
+                                    <ul>
+                                        {% for field, errors in form.errors.items %}
+                                            <li>{{ field }}: {{ errors|striptags }}</li>
+                                        {% endfor %}
+                                         {% if form.non_field_errors %}
+                                            <li>{{ form.non_field_errors|striptags }}</li>
+                                        {% endif %}
+                                     </ul>
+                                 </div>
+                             {% endif %}
+                            <div class="form-fields">
+                                <div class="form-group {% if form.name.errors %}error{% endif %}">
+                                    {{ form.name.label_tag }}
+                                    {{ form.name }}
+                                </div>
+                                <div class="form-group {% if form.email.errors %}error{% endif %}">
+                                    {{ form.email.label_tag }}
+                                    {{ form.email }}
+                                </div>
+                                <div class="form-group full-width {% if form.subject.errors %}error{% endif %}">
+                                     {{ form.subject.label_tag }}
+                                     {{ form.subject }}
+                                </div>
+                                <div class="form-group full-width {% if form.message.errors %}error{% endif %}">
+                                     {{ form.message.label_tag }}
+                                     {{ form.message }}
+                                </div>
+                                <div class="form-group full-width">
+                                    <button type="submit" class="btn">Отправить сообщение</button>
+                                </div>
+                            </div>
+                         </form>
+                    </div>
+
+                    <div class="contacts-info">
+                        <h2>Информация</h2>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h3>Адрес</h3>
+                                <p>Москва, ул. Садовая 12</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h3>Телефон</h3>
+                                <p>+7 (499) 123-45-67</p>
+                                <p>+7 (926) 987-65-43</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h3>Email</h3>
+                                <p>info@landscape-design.ru</p>
+                                <p>support@landscape-design.ru</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h3>Часы работы</h3>
+                                <p>Пн-Пт: 9:00 - 18:00</p>
+                                <p>Сб: 10:00 - 16:00</p>
+                                <p>Вс: Выходной</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-social">
+                            <h3>Мы в социальных сетях</h3>
+                            <div class="social-icons contact-socials">
+                                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-map">
+                    <h2>Наше местоположение</h2>
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2245.5087554276905!2d37.618675076925954!3d55.75639497268544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b54a50b315e573%3A0xa886bf5a3d9b2e68!2z0KHQsNC00L7QstCw0Y8g0YPQuy4sINCc0L7RgdC60LLQsA!5e0!3m2!1sru!2sru!4v1628610979088!5m2!1sru!2sru" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </main>
 {% endblock %}
 
 

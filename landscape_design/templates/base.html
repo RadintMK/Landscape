@@ -1,147 +1,137 @@
+<!-- base.html -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ландшафтный дизайн{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="header-container">
-        <div class="logo">
-            <a href="{% url 'index' %}"><h2>LandScape</h2></a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">Главная</a></li>
-                <li><a href="{% url 'services' %}">Услуги</a></li>
-                <li><a href="{% url 'portfolio' %}">Портфолио</a></li>
-                <li><a href="{% url 'blog' %}">Блог</a></li>
-                <li><a href="{% url 'contacts' %}">Контакты</a></li>
-                {% if user.is_authenticated %}
-                <li><a href="#" onclick="logout()">Выйти</a></li>
-            {% else %}
-                <li><a href="#" onclick="openLoginModal()">Войти</a></li>
-                <li><a href="#" onclick="openRegisterModal()">Регистрация</a></li>
-            {% endif %}
-            </ul>
-        </nav>
+    <div class="page-wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <a href="{% url 'index' %}"><h2>LandScape</h2></a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'services' %}">Услуги</a></li>
+                        <li><a href="{% url 'portfolio' %}">Портфолио</a></li>
+                        <li><a href="{% url 'blog' %}">Блог</a></li>
+                        <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                        {% comment %} <li><a href="{% url 'login' %}">Войти</a></li>
+                        <li><a href="{% url 'register' %}">Регистрация</a></li> {% endcomment %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        {% block content %}{% endblock %}
+        <footer>
+            <div class="footer-leaf-pattern"></div>
+            <div class="footer-container">
+                <div class="footer-main">
+                    <div class="footer-section brand-section">
+                        <h3 class="footer-logo">Landscape Design</h3>
+                        <p>Создаем гармонию природы и дизайна, превращая обычные участки в произведения искусства.</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon"><i class="fas fa-leaf"></i></a>
+                            <a href="#" class="social-icon"><i class="fas fa-tree"></i></a>
+                            <a href="#" class="social-icon"><i class="fas fa-seedling"></i></a>
+                            <a href="#" class="social-icon"><i class="fas fa-sun"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Контакты</h3>
+                        <ul class="footer-contact-list">
+                            <li><i class="fas fa-map-marker-alt"></i> Москва, ул. Садовая, 12</li>
+                            <li><i class="fas fa-phone"></i> +79876543210</li>
+                            <li><i class="fas fa-envelope"></i>kurkovmaksim@gmail.com</li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Часы работы</h3>
+                        <div class="working-hours">
+                            <div class="working-day">
+                                <span>Пн-Пт:</span>
+                                <span>9:00 - 21:00</span>
+                            </div>
+                            <div class="working-day">
+                                <span>Сб:</span>
+                                <span>10:00 - 20:00</span>
+                            </div>
+                            <div class="working-day">
+                                <span>Вс:</span>
+                                <span>Выходной</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Подписка</h3>
+                        <p>Получайте новости и советы по озеленению</p>
+                        <form class="subscription-form">
+                            <input type="email" placeholder="Ваш email" required>
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">&copy; {{ current_year }} Ландшафтный дизайн. Все права защищены.</div>
+                <div class="footer-links">
+                    <a href="#">Политика конфиденциальности</a>
+                    <a href="#">Условия использования</a>
+                </div>
+            </div>
+        </footer>
     </div>
-    </header>
-    
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
-    <footer>
-        <p>&copy; 2024 Ландшафтный дизайн. Все права защищены.</p>
-    </footer>
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="modal-body"></div>
+    {% comment %} <div id="loginModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('loginModal')">
+                <span class="modal-close-icon">&times;</span>
+            </button>
+            <div class="modal-content">
+                <h2>Вход</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Логин" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Пароль" required>
+                    </div>
+                    <button type="submit" class="btn">Войти</button>
+                </form>
+            </div>
         </div>
     </div>
+    <div id="registerModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('registerModal')">
+                <span class="modal-close-icon">&times;</span>
+            </button>
+            <div class="modal-content">
+                <h2>Регистрация</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Логин" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password1" placeholder="Пароль" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password2" placeholder="Повторите пароль" required>
+                    </div>
+                    <button type="submit" class="btn">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
-<script>
-    function openModal(content) {
-        const modal = document.getElementById('modal');
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = content;
-        modal.style.display = 'block';
-    }
-    
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-    }
-    
-    function openLoginModal() {
-        const loginForm = `
-            <h2>Вход</h2>
-            <form id="login-form">
-                <input type="text" name="username" placeholder="Логин" required>
-                <input type="password" name="password" placeholder="Пароль" required>
-                <button type="submit">Войти</button>
-            </form>
-        `;
-        openModal(loginForm);
-        document.getElementById('login-form').addEventListener('submit', submitLoginForm);
-    }
-    
-    function openRegisterModal() {
-        const registerForm = `
-            <h2>Регистрация</h2>
-            <form id="register-form">
-                <input type="text" name="username" placeholder="Логин" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password1" placeholder="Пароль" required>
-                <input type="password" name="password2" placeholder="Повторите пароль" required>
-                <button type="submit">Зарегистрироваться</button>
-            </form>
-        `;
-        openModal(registerForm);
-        document.getElementById('register-form').addEventListener('submit', submitRegisterForm);
-    }
-    
-    function submitLoginForm(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        fetch('/login/', {
-            method: 'POST',
-            body: formData,
-            headers: {'X-CSRFToken': getCookie('csrftoken')}
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                location.reload();
-            } else {
-                alert('Ошибка входа');
-            }
-        });
-    }
-    
-    function submitRegisterForm(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        fetch('/register/', {
-            method: 'POST',
-            body: formData,
-            headers: {'X-CSRFToken': getCookie('csrftoken')}
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                location.reload();
-            } else {
-                alert('Ошибка регистрации, данный логин занят');
-            }
-        });
-    }
-    
-    function logout() {
-        window.location.href = '/logout/';
-    }
-    
-    // Utility function to get CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    
-    document.querySelector('.close').addEventListener('click', closeModal);
-</script>
 </html>

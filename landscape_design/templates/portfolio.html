@@ -1,31 +1,96 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Портфолио{% endblock %}
+{% block title %}Портфолио - Ландшафтный дизайн{% endblock %}
 
 {% block content %}
-<h1>Наши проекты</h1>
-<div class="portfolio-gallery">
-    {% for project in projects %}
-    <div class="portfolio-item">
-        <div class="portfolio-item-image">
-            {% if project.image %}
-                <img src="{{ project.image.url }}" alt="{{ project.title }}">
-            {% endif %}
-            <div class="portfolio-item-overlay">
-                <a href="#" class="portfolio-item-button">Подробнее</a>
-            </div>
+<main>
+    <div class="page-header">
+        <h1>Наши проекты</h1>
+        <div class="breadcrumbs">
+            <a href="{% url 'index' %}">Главная</a> / <span>Портфолио</span>
         </div>
-        <div class="portfolio-item-content">
-            <h2>{{ project.title }}</h2>
-            <p>{{ project.description }}</p>
-            <div class="portfolio-item-tags">
-                {% for tag in project.tags.all %}
-                    <span class="portfolio-tag">{{ tag.name }}</span>
-                {% endfor %}
+    </div>
+    <div class="container">
+        <div class="portfolio-filters">
+            <button class="portfolio-filter active" data-filter="all">Все проекты</button>
+            {% for category in portfolio_categories %}
+            <button class="portfolio-filter" data-filter="{{ category.slug }}">{{ category.name }}</button>
+            {% empty %}
+                <p>Нет категорий.</p>
+            {% endfor %}
+        </div>
+        <div class="portfolio-gallery">
+            {% for project in portfolio %}
+            <div class="portfolio-item" {% if project.category %}data-category="{{ project.category.slug }}"{% else %}data-category="uncategorized"{% endif %}>
+                <div class="portfolio-item-image">
+                    {% with first_image=project.images.first %}
+                        {% if first_image and first_image.image %}
+                            <img src="{{ first_image.image.url }}" alt="{{ first_image.alt_text|default:project.title }}">
+                        {% else %}
+                        {% endif %}
+                    {% endwith %}
+                    <div class="portfolio-item-overlay">
+                        <a href="#" class="portfolio-item-button" onclick="openPortfolioModal('{{ project.id }}')">Подробнее</a>
+                    </div>
+                </div>
+                <div class="portfolio-item-content">
+                    <h2>{{ project.title }}</h2>
+                    <p>{{ project.preview }}</p>
+                    <div class="portfolio-item-tags">
+                        {% for tag in project.tags.all %}
+                            <a href="?tag={{ tag.slug }}" class="portfolio-tag">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p>Пока нет проектов для отображения.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% for project in portfolio %}
+    <div id="portfolio-{{ project.id }}" class="modal-overlay">
+        <div class="modal-container portfolio-modal">
+            <button class="modal-close" onclick="closeModal('portfolio-{{ project.id }}')">
+                <span class="modal-close-icon">×</span>
+            </button>
+            <div class="modal-content">
+                <h2>{{ project.title }}</h2>
+                <div class="portfolio-modal-gallery">
+                    {% for img_obj in project.images.all %}
+                        {% if img_obj.image %}
+                            <img src="{{ img_obj.image.url }}" alt="{{ img_obj.alt_text|default:project.title }}">
+                        {% endif %}
+                    {% empty %}
+                        <p>Нет изображений для этого проекта.</p>
+                    {% endfor %}
+                </div>
+                <div class="portfolio-modal-info">
+                    <div class="portfolio-modal-details">
+                        <h3>О проекте</h3>
+                        <p>{{ project.description }}</p>
+                    </div>
+                    <div class="portfolio-modal-specs">
+                        <h3>Характеристики</h3>
+                        <ul>
+                            {% if project.area %}<li><strong>Площадь:</strong> {{ project.area }} соток</li>{% endif %}
+                            {% if project.style %}<li><strong>Стиль:</strong> {{ project.style }}</li>{% endif %}
+                            {% if project.duration %}<li><strong>Срок реализации:</strong> {{ project.duration }} месяцев</li>{% endif %}
+                            {% if project.year %}<li><strong>Год:</strong> {{ project.year }}</li>{% endif %}
+                             {% if project.category %}<li><strong>Категория:</strong> {{ project.category.name }}</li>{% endif %}
+                             {% if project.tags.all %}<li><strong>Теги:</strong>
+                                 {% for tag in project.tags.all %}
+                                 {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                 {% endfor %}
+                             </li>{% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     {% endfor %}
-</div>
+</main>
 {% endblock %}

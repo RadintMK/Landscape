@@ -1,21 +1,43 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Услуги{% endblock %}
+{% block title %}Услуги - Ландшафтный дизайн{% endblock %}
 
 {% block content %}
-<div class="features">
-    <div class="features-grid">
-        {% for service in services %}
-        <div class="feature-card">
-            <img src="{{ service.image.url }}" alt="{{ service.title }}">
-            <h2>{{ service.title }}</h2>
-            <p>{{ service.description }}</p>
-            <p>Цена от: {{ service.price_from }} руб.</p>
-            <a href="{% url 'contacts' %}" class="btn">Заказать</a>
+<main>
+    <div class="page-header">
+        <h1>Услуги</h1>
+        <div class="breadcrumbs">
+            <a href="{% url 'index' %}">Главная</a> / <span>Услуги</span>
         </div>
-        {% empty %}
-        <p>Нет доступных услуг.</p>
-        {% endfor %}
     </div>
-</div>
+    <div class="container">
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card">
+                <div class="service-image">
+                    {% if service.image %}
+                        <img src="{{ service.image.url }}" alt="{{ service.title }}">
+                    {% else %}
+                    {% endif %}
+                </div>
+                <div class="service-content">
+                    <h2>{{ service.title }}</h2>
+                    <p>{{ service.description }}</p>
+                    <div class="service-price">
+                        {% if service.price_from %}
+                            Цена от: {{ service.price_from }} руб.
+                        {% else %}
+                             Цена по запросу
+                         {% endif %}
+                     </div>
+                    <a href="{% url 'contacts' %}" class="btn service-btn">Заказать</a>
+                </div>
+            </div>
+            {% empty %}
+                <p>В данный момент информация об услугах недоступна.</p>
+            {% endfor %}
+        </div>
+    </div>
+</main>
 {% endblock %}
